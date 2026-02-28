@@ -4,6 +4,12 @@ node_modules/
 # Build output
 dist/
 
+# Gros médias (sync lent)
+*.MOV
+*.HEIC
+public/**/*.MOV
+public/**/*.HEIC
+
 # Env / IDE
 .env
 .env.local
