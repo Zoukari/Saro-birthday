@@ -16,6 +16,7 @@ const N = SLIDES.length
 export default function App() {
   const [showLoader, setShowLoader] = useState(true)
   const [running,    setRunning]    = useState(false)
+  const [musicStatus, setMusicStatus] = useState('loading')
 
   const audioRef = useRef(null)
   const dotRef   = useRef(null)
@@ -27,9 +28,37 @@ export default function App() {
 
   const { muted, toggleMute } = useLocalMusic(audioRef, running)
 
+  useEffect(() => {
+    if (showLoader || !audioRef.current) return
+    const el = audioRef.current
+    setMusicStatus('loading')
+    const onReady = () => setMusicStatus('ready')
+    const onErr = () => setMusicStatus('error')
+    el.addEventListener('canplaythrough', onReady, { once: true })
+    el.addEventListener('error', onErr, { once: true })
+    if (el.readyState >= 3) setMusicStatus('ready')
+    return () => {
+      el.removeEventListener('canplaythrough', onReady)
+      el.removeEventListener('error', onErr)
+    }
+  }, [showLoader])
+
   const handleLoaderComplete = useCallback(() => {
     setShowLoader(false)
     setRunning(true)
+  }, [])
+
+  const handleRestart = useCallback(() => {
+    jumpTo(0)
+    setRunning(true)
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(() => {})
+    }
+  }, [jumpTo])
+
+  const togglePause = useCallback(() => {
+    setRunning(r => !r)
   }, [])
 
   useEffect(() => {
@@ -80,6 +109,10 @@ export default function App() {
           jumpTo={jumpTo}
           muted={muted}
           onToggleMute={toggleMute}
+          running={running}
+          onPauseResume={togglePause}
+          onRestart={handleRestart}
+          musicStatus={musicStatus}
         />
       )}
     </>

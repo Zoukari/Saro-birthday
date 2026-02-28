@@ -8,12 +8,15 @@ export function useLocalMusic(audioRef, running) {
   const [muted, setMuted] = useState(false)
 
   useEffect(() => {
-    if (!running || !audioRef?.current) return
+    if (!audioRef?.current) return
     const el = audioRef.current
     el.volume = 0.55
-    el.muted = false
-    const p = el.play()
-    if (p && typeof p.catch === 'function') p.catch(() => {})
+    if (running) {
+      const p = el.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
+    } else {
+      el.pause()
+    }
   }, [running, audioRef])
 
   useEffect(() => {
