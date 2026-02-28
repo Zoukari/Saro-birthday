@@ -97,22 +97,6 @@ html, body, #root {
   background-size: 38px 38px;
 }
 
-/* ── SCROLL STRIP (défilement vertical type site) ── */
-.scroll-strip {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transition: none;
-}
-.slide-cell {
-  position: relative;
-  min-height: 100vh;
-}
-.slide-cell .slide-base {
-  pointer-events: auto;
-}
-
 /* ── SLIDE BASE ── */
 .slide-base {
   position: absolute;
@@ -120,10 +104,8 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: center;
+  will-change: transform;
   pointer-events: none;
-}
-.slide-base--full {
-  pointer-events: auto;
 }
 
 /* ── FRAMED CARD (moving border) ── */

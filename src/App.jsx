@@ -18,13 +18,12 @@ export default function App() {
   const [running,    setRunning]    = useState(false)
 
   const audioRef = useRef(null)
-  const stripRef = useRef(null)
   const dotRef   = useRef(null)
   const ringRef  = useRef(null)
   useCursor(dotRef, ringRef)
 
-  const { currentIdx, progressFrac, jumpTo } =
-    useAutoScroll(N, running, stripRef)
+  const { currentIdx, progressFrac, jumpTo, registerSlide } =
+    useAutoScroll(N, running)
 
   const { muted, toggleMute } = useLocalMusic(audioRef, running)
 
@@ -71,7 +70,7 @@ export default function App() {
       {showLoader && <Loader audioRef={audioRef} onComplete={handleLoaderComplete} />}
 
       <div className="fixed inset-0 z-10 overflow-hidden">
-        <SlideRenderer slides={SLIDES} stripRef={stripRef} />
+        <SlideRenderer slides={SLIDES} registerSlide={registerSlide} />
       </div>
 
       {!showLoader && (
