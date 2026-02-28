@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────
-// Galerie : toutes les images de public/photo-saro
-// Généré / mis à jour par: node scripts/convert-photos.js
+// Galerie : une image différente par slide (index unique)
+// Généré par: node scripts/convert-photos.js
 // ─────────────────────────────────────────────────────────
 
 const PHOTO_SARO_FILES = [
@@ -21,7 +21,6 @@ const PHOTO_SARO_FILES = [
   '8c49d815-80f5-496f-b546-b6729b364609.jpeg',
   '92fa8cc4-62a9-4290-9cee-226f8bece67e.jpeg',
   '96cdd09e-3919-4315-a2ce-d011587704e9.JPG',
-  '9cd79e40-18a8-4b96-8c9a-8c182d1d7fc1 2.JPG',
   '9cd79e40-18a8-4b96-8c9a-8c182d1d7fc1.JPG',
   '9ef6ed37-9a5a-404c-9abe-595171b71fa4.jpeg',
   'IMG_0224.jpg',
@@ -70,15 +69,13 @@ const PHOTO_SARO_FILES = [
 ]
 
 const BASE = '/photo-saro/'
-let pi = 0, li = 0, qi = 0
+const N = PHOTO_SARO_FILES.length
 
-function photoUrl(index) {
-  return BASE + encodeURIComponent(PHOTO_SARO_FILES[index % PHOTO_SARO_FILES.length])
+/** Index → URL ; index % N pour ne pas dépasser le pool */
+export function photoUrl(index) {
+  return BASE + encodeURIComponent(PHOTO_SARO_FILES[index % N])
 }
-
-export const np = () => photoUrl(pi++)
-export const nl = () => photoUrl(li++)
-export const nq = () => photoUrl(qi++)
+export { N as PHOTO_COUNT }
 
 export function collectImageUrls(slides) {
   const urls = []

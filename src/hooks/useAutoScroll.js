@@ -1,57 +1,111 @@
 // ─────────────────────────────────────────────────────────
-// useAutoScroll — défilement vertical continu (type scroll de site)
-// Un seul ruban vertical, la vue défile de haut en bas
+// useAutoScroll — une slide à la fois, transition cinématique
+// Glissement vertical : sortie vers le haut, entrée depuis le bas
 // ─────────────────────────────────────────────────────────
 import { useRef, useState, useCallback, useEffect } from 'react'
 
-const TOTAL_MS = 238_000 // 3 min 58 s
+const TOTAL_MS = 238_000
 
-export function useAutoScroll(n, running, stripRef) {
+const easeOutCubic = t => 1 - Math.pow(1 - t, 3)
+const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+const lerp = (a, b, t) => a + (b - a) * t
+
+export function useAutoScroll(n, running) {
   const startRef = useRef(null)
+  const prevIdxRef = useRef(-1)
   const rafRef = useRef(null)
+  const lastSlideProgRef = useRef(0)
   const lastProgressFracRef = useRef(0)
 
   const [currentIdx, setCurrentIdx] = useState(0)
+  const [slideProgress, setSlideProgress] = useState(0)
   const [progressFrac, setProgressFrac] = useState(0)
 
-  const jumpTo = useCallback((i) => {
-    const frac = Math.min(Math.max(i / n, 0), 1)
-    startRef.current = performance.now() - frac * TOTAL_MS
-  }, [n])
+  const slideRefs = useRef([])
+
+  const registerSlide = useCallback((idx, el) => {
+    slideRefs.current[idx] = el
+  }, [])
+
+  const hideEl = useCallback(el => {
+    if (!el) return
+    el.style.opacity = '0'
+    el.style.transform = 'translateY(24%) scale(0.98)'
+    el.style.pointerEvents = 'none'
+  }, [])
+
+  const renderEl = useCallback((el, p) => {
+    if (!el) return
+    const enterEnd = 0.2
+    const exitStart = 0.72
+    let yPct, scale, op
+    if (p < enterEnd) {
+      const t = easeOutCubic(p / enterEnd)
+      yPct = lerp(22, 0, t)
+      scale = lerp(1.04, 1, t)
+      op = lerp(0.4, 1, t)
+    } else if (p < exitStart) {
+      yPct = 0
+      scale = 1
+      op = 1
+    } else {
+      const t = easeInOutCubic((p - exitStart) / (1 - exitStart))
+      yPct = lerp(0, -22, t)
+      scale = lerp(1, 0.97, t)
+      op = lerp(1, 0.35, t)
+    }
+    el.style.opacity = String(op)
+    el.style.transform = `translateY(${yPct}%) scale(${scale})`
+    el.style.pointerEvents = p >= enterEnd && p <= exitStart ? 'auto' : 'none'
+  }, [])
+
+  const jumpTo = useCallback(i => {
+    slideRefs.current.forEach(hideEl)
+    prevIdxRef.current = -1
+    startRef.current = performance.now() - (i / n) * TOTAL_MS
+  }, [n, hideEl])
 
   useEffect(() => {
     if (!running) return
 
-    const tick = (ts) => {
+    const tick = ts => {
       if (startRef.current === null) startRef.current = ts
+      const raw = Math.min((ts - startRef.current) / TOTAL_MS, 1)
+      const sp = raw * n
+      const ci = Math.min(Math.floor(sp), n - 1)
+      const ip = sp - ci
 
-      let raw = Math.min((ts - startRef.current) / TOTAL_MS, 1)
-      const ci = Math.min(Math.floor(raw * n), n - 1)
-
-      // Strip : on déplace tout le ruban verticalement (scroll fluide)
-      if (stripRef?.current) {
-        const y = raw * (n - 1) * 100
-        stripRef.current.style.transform = `translate3d(0, -${y}vh, 0)`
+      if (ci !== prevIdxRef.current) {
+        if (prevIdxRef.current >= 0)
+          hideEl(slideRefs.current[prevIdxRef.current])
+        prevIdxRef.current = ci
+        setCurrentIdx(ci)
       }
 
-      setCurrentIdx(ci)
+      renderEl(slideRefs.current[ci], ip)
 
-      if (Math.abs(raw - lastProgressFracRef.current) > 0.008) {
+      if (Math.abs(ip - lastSlideProgRef.current) > 0.02) {
+        lastSlideProgRef.current = ip
+        setSlideProgress(ip)
+      }
+      if (Math.abs(raw - lastProgressFracRef.current) > 0.01) {
         lastProgressFracRef.current = raw
         setProgressFrac(raw)
       }
 
-      if (raw >= 1) {
-        startRef.current = ts
+      if (raw < 1) {
         rafRef.current = requestAnimationFrame(tick)
       } else {
+        startRef.current = ts
+        prevIdxRef.current = -1
+        slideRefs.current.forEach(hideEl)
         rafRef.current = requestAnimationFrame(tick)
       }
     }
 
     rafRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [running, n, stripRef])
+  }, [running, n, hideEl, renderEl])
 
-  return { currentIdx, slideProgress: 0, progressFrac, jumpTo, registerSlide: () => {} }
+  return { currentIdx, slideProgress, progressFrac, jumpTo, registerSlide }
 }

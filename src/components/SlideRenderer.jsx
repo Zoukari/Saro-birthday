@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────
-// SlideRenderer — ruban vertical : chaque slide = 100vh, on défile le tout
+// SlideRenderer — une slide à la fois, style piloté par useAutoScroll
 // ─────────────────────────────────────────────────────────
+import { useEffect } from 'react'
 import SlideHero      from './slides/SlideHero.jsx'
 import SlideQuote     from './slides/SlideQuote.jsx'
 import SlideDiag      from './slides/SlideDiag.jsx'
@@ -23,27 +24,33 @@ function SlideContent({ data }) {
   return null
 }
 
-export default function SlideRenderer({ slides, stripRef }) {
+export default function SlideRenderer({ slides, registerSlide }) {
+  return (
+    <>
+      {slides.map((data, idx) => (
+        <SlideWrapper key={idx} idx={idx} data={data} registerSlide={registerSlide} />
+      ))}
+    </>
+  )
+}
+
+function SlideWrapper({ idx, data, registerSlide }) {
+  useEffect(() => {
+    const el = document.getElementById(`slide-${idx}`)
+    if (el) registerSlide(idx, el)
+  }, [idx, registerSlide])
+
   return (
     <div
-      ref={stripRef}
-      className="scroll-strip"
+      id={`slide-${idx}`}
+      className="slide-base"
       style={{
-        height: `${slides.length * 100}vh`,
-        willChange: 'transform',
+        opacity: 0,
+        transform: 'translateY(24%) scale(0.98)',
+        pointerEvents: 'none',
       }}
     >
-      {slides.map((data, idx) => (
-        <section
-          key={idx}
-          className="slide-cell"
-          style={{ minHeight: '100vh', position: 'relative' }}
-        >
-          <div className="slide-base slide-base--full">
-            <SlideContent data={data} />
-          </div>
-        </section>
-      ))}
+      <SlideContent data={data} />
     </div>
   )
 }
