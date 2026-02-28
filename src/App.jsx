@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────
-// App — orchestrates loader, scroll engine, slides, UI
+// App — loader (musique + images), scroll, slides, UI
 // ─────────────────────────────────────────────────────────
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Loader         from './components/Loader.jsx'
@@ -7,7 +7,7 @@ import AmbientFX      from './components/AmbientFX.jsx'
 import SlideRenderer  from './components/SlideRenderer.jsx'
 import UI             from './components/UI.jsx'
 import { useAutoScroll } from './hooks/useAutoScroll.js'
-import { useYouTube }    from './hooks/useYouTube.js'
+import { useLocalMusic } from './hooks/useLocalMusic.js'
 import { useCursor }     from './hooks/useCursor.js'
 import { SLIDES }        from './data/slides.js'
 
@@ -17,25 +17,22 @@ export default function App() {
   const [showLoader, setShowLoader] = useState(true)
   const [running,    setRunning]    = useState(false)
 
-  // Cursor refs
-  const dotRef  = useRef(null)
-  const ringRef = useRef(null)
+  const audioRef = useRef(null)
+  const stripRef = useRef(null)
+  const dotRef   = useRef(null)
+  const ringRef  = useRef(null)
   useCursor(dotRef, ringRef)
 
-  // Auto-scroll engine
-  const { currentIdx, slideProgress, progressFrac, jumpTo, registerSlide } =
-    useAutoScroll(N, running)
+  const { currentIdx, progressFrac, jumpTo } =
+    useAutoScroll(N, running, stripRef)
 
-  // YouTube music — start when running
-  const { muted, toggleMute } = useYouTube('ytplayer', running)
+  const { muted, toggleMute } = useLocalMusic(audioRef, running)
 
-  // When loader completes → start show
   const handleLoaderComplete = useCallback(() => {
     setShowLoader(false)
     setRunning(true)
   }, [])
 
-  // Keyboard navigation
   useEffect(() => {
     const onKey = e => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown')
@@ -47,7 +44,6 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [currentIdx, jumpTo])
 
-  // Touch swipe
   useEffect(() => {
     let tx = 0
     const onStart = e => { tx = e.touches[0].clientX }
@@ -67,22 +63,17 @@ export default function App() {
 
   return (
     <>
-      {/* Custom cursor */}
       <div ref={dotRef}  className="custom-cursor" />
       <div ref={ringRef} className="cursor-ring" />
 
-      {/* Ambient background FX */}
       <AmbientFX />
 
-      {/* Loader */}
-      {showLoader && <Loader onComplete={handleLoaderComplete} />}
+      {showLoader && <Loader audioRef={audioRef} onComplete={handleLoaderComplete} />}
 
-      {/* Slide stage */}
       <div className="fixed inset-0 z-10 overflow-hidden">
-        <SlideRenderer slides={SLIDES} registerSlide={registerSlide} />
+        <SlideRenderer slides={SLIDES} stripRef={stripRef} />
       </div>
 
-      {/* UI chrome */}
       {!showLoader && (
         <UI
           progressFrac={progressFrac}
@@ -92,14 +83,6 @@ export default function App() {
           onToggleMute={toggleMute}
         />
       )}
-
-      {/* Hidden YT player */}
-      <div style={{
-        position: 'fixed', width: 1, height: 1, opacity: .001,
-        bottom: 0, right: 0, overflow: 'hidden', pointerEvents: 'none',
-      }}>
-        <div id="ytplayer" />
-      </div>
     </>
   )
 }
