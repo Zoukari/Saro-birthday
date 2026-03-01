@@ -1,6 +1,6 @@
-export default function SlideQuote({ q, sub, extra, sh }) {
+export default function SlideQuote({ q, sub, sh }) {
   return (
-    <div className="flex flex-col items-center justify-start text-center gap-4 pt-14 px-10 pb-10 w-full h-full relative">
+    <div className="flex flex-col items-center justify-center text-center gap-4 p-10 w-full h-full relative pb-28">
       <div className="text-[9px] tracking-[.54em] uppercase text-gold opacity-80 z-10">
         {sub}
       </div>
@@ -9,11 +9,6 @@ export default function SlideQuote({ q, sub, extra, sh }) {
         style={{ fontSize: 'clamp(24px,4vw,58px)' }}
         dangerouslySetInnerHTML={{ __html: q.replace(/\n/g, '<br/>') }}
       />
-      {extra && (
-        <div className="text-choco font-serif italic text-lg opacity-90 z-10" style={{ fontSize: 'clamp(16px,2.5vw,28px)' }}>
-          {extra}
-        </div>
-      )}
       <div className="divider-gold z-10" />
     </div>
   )

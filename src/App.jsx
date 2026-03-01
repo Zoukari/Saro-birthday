@@ -24,9 +24,9 @@ export default function App() {
   useCursor(dotRef, ringRef)
 
   const { currentIdx, progressFrac, jumpTo, registerSlide } =
-    useAutoScroll(N, running)
+    useAutoScroll(N, running, audioRef)
 
-  const { muted, toggleMute } = useLocalMusic(audioRef, running)
+  const { muted, toggleMute } = useLocalMusic(audioRef, running, progressFrac)
 
   useEffect(() => {
     if (showLoader || !audioRef.current) return
@@ -48,36 +48,57 @@ export default function App() {
     setRunning(true)
   }, [])
 
+  const syncAudioToSlide = useCallback((slideIndex) => {
+    if (!audioRef.current) return
+    const d = audioRef.current.duration
+    if (d && isFinite(d))
+      audioRef.current.currentTime = (slideIndex / N) * d
+  }, [N])
+
+  const handleJumpTo = useCallback((slideIndex) => {
+    jumpTo(slideIndex)
+    syncAudioToSlide(slideIndex)
+  }, [jumpTo, syncAudioToSlide])
+
   const handleRestart = useCallback(() => {
     jumpTo(0)
+    syncAudioToSlide(0)
     setRunning(true)
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0
+    if (audioRef.current)
       audioRef.current.play().catch(() => {})
-    }
-  }, [jumpTo])
+  }, [jumpTo, syncAudioToSlide])
 
   const togglePause = useCallback(() => {
-    setRunning(r => !r)
-  }, [])
+    setRunning(r => {
+      if (r) {
+        if (audioRef.current) audioRef.current.pause()
+        return false
+      }
+      if (audioRef.current && isFinite(audioRef.current.duration) && audioRef.current.duration > 0) {
+        audioRef.current.currentTime = progressFrac * audioRef.current.duration
+        audioRef.current.play().catch(() => {})
+      }
+      return true
+    })
+  }, [progressFrac])
 
   useEffect(() => {
     const onKey = e => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown')
-        jumpTo(Math.min(currentIdx + 1, N - 1))
+        handleJumpTo(Math.min(currentIdx + 1, N - 1))
       else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
-        jumpTo(Math.max(currentIdx - 1, 0))
+        handleJumpTo(Math.max(currentIdx - 1, 0))
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [currentIdx, jumpTo])
+  }, [currentIdx, handleJumpTo])
 
   useEffect(() => {
     let tx = 0
     const onStart = e => { tx = e.touches[0].clientX }
     const onEnd   = e => {
       const d = tx - e.changedTouches[0].clientX
-      if (Math.abs(d) > 48) jumpTo(d > 0
+      if (Math.abs(d) > 48) handleJumpTo(d > 0
         ? Math.min(currentIdx + 1, N - 1)
         : Math.max(currentIdx - 1, 0))
     }
@@ -87,7 +108,7 @@ export default function App() {
       window.removeEventListener('touchstart', onStart)
       window.removeEventListener('touchend',   onEnd)
     }
-  }, [currentIdx, jumpTo])
+  }, [currentIdx, handleJumpTo])
 
   return (
     <>
@@ -106,7 +127,7 @@ export default function App() {
         <UI
           progressFrac={progressFrac}
           currentIdx={currentIdx}
-          jumpTo={jumpTo}
+          jumpTo={handleJumpTo}
           muted={muted}
           onToggleMute={toggleMute}
           running={running}

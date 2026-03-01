@@ -1,6 +1,7 @@
 import { useRef } from 'react'
+import { MEME_LINK } from '../../data/memeLink.js'
 
-export default function SlideFramed({ img, cap, w, h, extra, memeLink }) {
+export default function SlideFramed({ img, cap, w, h, linkMeme }) {
   const fwRef = useRef(null)
 
   const onMove = e => {
@@ -19,14 +20,8 @@ export default function SlideFramed({ img, cap, w, h, extra, memeLink }) {
     el.style.transform  = 'translate(0,0) scale(1)'
   }
 
-  const memeUrl = 'https://youtube.com/shorts/jqa6UT_AnhE?si=bY-F2SU0eckIEOHx'
-
   return (
-    <div className="flex flex-col items-center justify-start gap-4 pt-12 w-full h-full">
-      {(extra || cap) && <div className="font-serif italic text-choco text-center text-lg opacity-90">{extra || cap}</div>}
-      {memeLink && (
-        <a href={memeUrl} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline text-sm">Lien du meme</a>
-      )}
+    <div className="flex flex-col items-center justify-center gap-4 w-full h-full pb-28">
       <div
         ref={fwRef}
         className="frame-wrap"
@@ -37,6 +32,21 @@ export default function SlideFramed({ img, cap, w, h, extra, memeLink }) {
           <img src={img} alt="" loading="eager" style={{ width: w, height: h }} />
         </div>
       </div>
+      {cap && (
+        <p className="font-serif italic font-light text-choco text-center px-4" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
+          {cap}
+        </p>
+      )}
+      {linkMeme && (
+        <a
+          href={MEME_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[11px] tracking-widest uppercase text-gold opacity-90 hover:opacity-100 underline underline-offset-2 cursor-none"
+        >
+          Lien du meme
+        </a>
+      )}
     </div>
   )
 }

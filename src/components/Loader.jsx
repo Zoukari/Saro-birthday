@@ -6,10 +6,8 @@ import { useEffect, useRef, useState } from 'react'
 import { collectImageUrls } from '../data/images.js'
 import { SLIDES } from '../data/slides.js'
 
-const MUSIC_FILE = 'Taylor Swift - Lover (Official Music Video) (1).mp3'
-const basePath = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/'
-const MUSIC_URL =
-  (typeof window !== 'undefined' ? window.location.origin : '') + basePath + encodeURIComponent(MUSIC_FILE)
+const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/'
+const MUSIC_URL = baseUrl + encodeURIComponent('Taylor Swift - Lover (Official Music Video) (1).mp3')
 
 export default function Loader({ audioRef, onComplete }) {
   const [pct, setPct] = useState(0)
@@ -22,10 +20,8 @@ export default function Loader({ audioRef, onComplete }) {
     const urls = collectImageUrls(SLIDES)
     const total = urls.length + 1
     let done = 0
-    const musicUrl = (typeof window !== 'undefined' ? window.location.origin : '') + basePath + encodeURIComponent(MUSIC_FILE)
-    const audio = new Audio(musicUrl)
+    const audio = new Audio(MUSIC_URL)
     audio.preload = 'auto'
-    audio.load()
     audioRef.current = audio
 
     const checkDone = () => {

@@ -29,7 +29,7 @@ function FlyingCard({ card, ci, rounded }) {
   return (
     <div
       ref={cardRef}
-      className={`flying-card${card.pol ? ' polaroid' : ''}`}
+      className={`flying-card${card.pol ? ' polaroid' : ''}${rounded ? ' rounded-2xl overflow-hidden' : ''}`}
       style={{
         width:     card.w,
         height:    totalH,
@@ -37,8 +37,6 @@ function FlyingCard({ card, ci, rounded }) {
         top:       `calc(50% + ${card.y}%)`,
         transform: baseTf,
         zIndex:    10 + ci,
-        borderRadius: rounded ? 16 : undefined,
-        overflow: rounded ? 'hidden' : undefined,
       }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
@@ -47,22 +45,38 @@ function FlyingCard({ card, ci, rounded }) {
         src={card.img}
         alt=""
         loading="eager"
-        style={{ width: card.w, height: imgH, display: 'block', objectFit: 'cover', borderRadius: rounded ? 16 : 0 }}
+        style={{ width: card.w, height: imgH, display: 'block', objectFit: 'cover', borderRadius: rounded ? 12 : 0 }}
       />
     </div>
   )
 }
 
-export default function SlideCards({ v, imgs, lbls, rounded, recap }) {
+export default function SlideCards({ v, imgs, lbls, recap, overlay, topCaption, rounded }) {
   const cards = resolveCards(v, imgs, lbls)
   return (
     <div className="absolute inset-0 overflow-hidden">
+      {topCaption && (
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 text-center z-20 px-4 pb-24">
+          <p className="font-serif italic text-choco text-sm opacity-95" style={{ fontSize: 'clamp(12px,1.8vw,18px)' }}>
+            {topCaption}
+          </p>
+        </div>
+      )}
       {cards.map((card, ci) => (
         <FlyingCard key={ci} card={card} ci={ci} rounded={rounded} />
       ))}
+      {overlay && (
+        <div className="absolute bottom-0 left-0 right-0 text-center p-4 pb-28 z-20">
+          <p className="font-serif italic text-choco opacity-95" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
+            {overlay}
+          </p>
+        </div>
+      )}
       {recap && (
-        <div className="absolute bottom-0 left-0 right-0 font-serif italic text-choco text-center text-sm px-6 pb-8 pt-2 opacity-90 max-w-xl mx-auto z-20" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
-          {recap}
+        <div className="absolute bottom-0 left-0 right-0 text-center p-4 pb-28 z-20">
+          <p className="font-serif italic text-choco opacity-95" style={{ fontSize: 'clamp(13px,1.8vw,20px)' }}>
+            {recap}
+          </p>
         </div>
       )}
     </div>

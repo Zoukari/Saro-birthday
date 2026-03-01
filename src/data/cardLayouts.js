@@ -6,11 +6,11 @@
 
 export const CARD_VARIANTS = {
 
-  /** 3 cartes en éventail naturel */
+  /** 3 cartes en éventail naturel (espacées pour tout voir) */
   fan3: [
-    { x: -33, y:  6, r: -13, s: .80, w: 222, h: 330 },
-    { x:   0, y: -4, r:   0, s:  1,  w: 265, h: 375 },
-    { x:  33, y:  7, r:  12, s: .78, w: 215, h: 322 },
+    { x: -42, y:  4, r: -10, s: .62, w: 175, h: 260 },
+    { x:   0, y: -6, r:   0, s: .78, w: 208, h: 295 },
+    { x:  42, y:  5, r:  10, s: .60, w: 168, h: 250 },
   ],
 
   /** 4 polaroïds éparpillés */
@@ -21,13 +21,13 @@ export const CARD_VARIANTS = {
     { x:  46, y:  14, r:  17, s: .73, w: 156, h: 190, pol: true },
   ],
 
-  /** 5 cartes en cascade diagonale */
+  /** 5 cartes en cascade diagonale (espacées pour tout voir) */
   stack5: [
-    { x: -54, y:  18, r: -12, s: .67, w: 185, h: 275 },
-    { x: -24, y:  -7, r:  -4, s: .83, w: 218, h: 314 },
-    { x:   4, y:   5, r:   1, s:1.02, w: 258, h: 364 },
-    { x:  30, y:  -7, r:   5, s: .81, w: 214, h: 308 },
-    { x:  56, y:  16, r:  14, s: .65, w: 180, h: 265 },
+    { x: -52, y:  12, r: -8, s: .48, w: 132, h: 198 },
+    { x: -26, y:  -4, r:  -3, s: .58, w: 158, h: 228 },
+    { x:   0, y:   2, r:   0, s: .68, w: 188, h: 268 },
+    { x:  26, y:  -4, r:   3, s: .56, w: 155, h: 222 },
+    { x:  52, y:  10, r:   8, s: .46, w: 128, h: 192 },
   ],
 
   /** Ruban horizontal doux */
@@ -37,11 +37,11 @@ export const CARD_VARIANTS = {
     { x:  37, y:  4, r:  2, s: .86, w: 242, h: 345 },
   ],
 
-  /** 1 grande carte centrale + 2 satellites */
+  /** 1 grande carte centrale + 2 satellites (espacées pour tout voir) */
   hero1: [
-    { x: -40, y: -18, r: -10, s: .61, w: 185, h: 268 },
-    { x:   0, y:   0, r:   0, s:1.12, w: 295, h: 415 },
-    { x:  42, y:  16, r:   7, s: .59, w: 175, h: 255 },
+    { x: -44, y: -12, r:  -8, s: .48, w: 142, h: 200 },
+    { x:   0, y:   0, r:   0, s: .72, w: 212, h: 298 },
+    { x:  44, y:  10, r:   6, s: .46, w: 138, h: 195 },
   ],
 
   /** Disposition en triangle */
@@ -51,12 +51,12 @@ export const CARD_VARIANTS = {
     { x:  32, y:  14, r:   5, s: .82, w: 228, h: 325 },
   ],
 
-  /** Cascade diagonale montante */
+  /** Cascade diagonale montante (espacées pour tout voir) */
   cas4: [
-    { x: -46, y:  22, r: -11, s: .73, w: 198, h: 286 },
-    { x: -15, y:   4, r:  -3, s: .88, w: 235, h: 332 },
-    { x:  15, y:  -8, r:   4, s: .96, w: 252, h: 355 },
-    { x:  46, y: -18, r:  12, s: .76, w: 212, h: 305 },
+    { x: -48, y:  14, r:  -8, s: .50, w: 136, h: 195 },
+    { x: -16, y:   2, r:  -2, s: .58, w: 158, h: 222 },
+    { x:  16, y:  -6, r:   2, s: .62, w: 168, h: 238 },
+    { x:  48, y:  -10, r:   8, s: .50, w: 138, h: 198 },
   ],
 
   /** 3 colonnes portrait serrées */
@@ -96,15 +96,6 @@ export const CARD_VARIANTS = {
     { x: -16, y:  4, r: -1, s: .92, w: 215, h: 364 },
     { x:  16, y: -4, r:  1, s: .90, w: 209, h: 354 },
     { x:  48, y:  2, r:  2, s: .78, w: 183, h: 325 },
-  ],
-
-  /** 5 cartes en ruban horizontal (bien espacées, pas de chevauchement) */
-  strip5: [
-    { x: -52, y: 0, r: -2, s: .72, w: 165, h: 295 },
-    { x: -26, y: 2, r: -1, s: .82, w: 188, h: 328 },
-    { x:   0, y: -2, r:  0, s: .90, w: 205, h: 355 },
-    { x:  26, y: 2, r:  1, s: .82, w: 188, h: 328 },
-    { x:  52, y: 0, r:  2, s: .72, w: 165, h: 295 },
   ],
 
   /** 2 grandes cartes symétriques */

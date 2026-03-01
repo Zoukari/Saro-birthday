@@ -13,7 +13,7 @@ import SlideFinal     from './slides/SlideFinal.jsx'
 
 function SlideContent({ data }) {
   const { t, ...rest } = data
-  if (t === 'hero')   return <SlideHero heroText={rest.heroText} />
+  if (t === 'hero')   return <SlideHero {...rest} />
   if (t === 'quote')  return <SlideQuote  {...rest} />
   if (t === 'diag')   return <SlideDiag   {...rest} />
   if (t === 'full')   return <SlideFullBleed {...rest} />
