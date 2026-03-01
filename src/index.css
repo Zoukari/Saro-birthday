@@ -97,17 +97,17 @@ html, body, #root {
   background-size: 38px 38px;
 }
 
-/* ── SLIDE BASE ── (marge basse pour ne pas cacher le contenu sous la barre du bas) */
+/* ── SLIDE BASE ── (marge basse pour ne pas cacher les textes sous l’island bar) */
 .slide-base {
   position: absolute;
   inset: 0;
-  padding-bottom: 140px;
-  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   will-change: transform;
   pointer-events: none;
+  padding-bottom: 88px;
+  box-sizing: border-box;
 }
 
 /* ── FRAMED CARD (moving border) ── */

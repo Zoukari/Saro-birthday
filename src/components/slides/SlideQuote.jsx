@@ -1,6 +1,6 @@
 export default function SlideQuote({ q, sub, extra, sh }) {
   return (
-    <div className="flex flex-col items-center justify-start text-center gap-4 p-10 pt-8 w-full h-full relative">
+    <div className="flex flex-col items-center justify-start text-center gap-4 pt-14 px-10 pb-10 w-full h-full relative">
       <div className="text-[9px] tracking-[.54em] uppercase text-gold opacity-80 z-10">
         {sub}
       </div>

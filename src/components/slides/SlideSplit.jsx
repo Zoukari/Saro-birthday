@@ -22,9 +22,9 @@ export default function SlideSplit({ img, q, lbl, sub, rev, extra, photoCaption 
         />
       </div>
 
-      {/* Text side */}
+      {/* Text side — aligné en haut pour ne pas être caché par la barre */}
       <div
-        className="flex-1 flex flex-col justify-center"
+        className="flex-1 flex flex-col justify-start pt-14 pb-24"
         style={rev ? { padding: '52px 32px 52px 48px' } : { padding: '52px 48px 52px 32px' }}
       >
         {lbl && <div className="text-[9px] tracking-[.54em] uppercase text-gold opacity-80 mb-3">{lbl}</div>}

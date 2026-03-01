@@ -61,7 +61,7 @@ export default function SlideCards({ v, imgs, lbls, rounded, recap }) {
         <FlyingCard key={ci} card={card} ci={ci} rounded={rounded} />
       ))}
       {recap && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 font-serif italic text-choco text-center text-sm px-6 opacity-90 max-w-xl z-20" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
+        <div className="absolute bottom-0 left-0 right-0 font-serif italic text-choco text-center text-sm px-6 pb-8 pt-2 opacity-90 max-w-xl mx-auto z-20" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
           {recap}
         </div>
       )}
