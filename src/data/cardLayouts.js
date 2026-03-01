@@ -8,9 +8,9 @@ export const CARD_VARIANTS = {
 
   /** 3 cartes en éventail naturel (espacées pour tout voir) */
   fan3: [
-    { x: -42, y:  4, r: -10, s: .62, w: 175, h: 260 },
-    { x:   0, y: -6, r:   0, s: .78, w: 208, h: 295 },
-    { x:  42, y:  5, r:  10, s: .60, w: 168, h: 250 },
+    { x: -48, y:  2, r: -8, s: .50, w: 140, h: 208 },
+    { x:   0, y: -8, r:   0, s: .58, w: 162, h: 230 },
+    { x:  48, y:  2, r:   8, s: .50, w: 140, h: 208 },
   ],
 
   /** 4 polaroïds éparpillés */
