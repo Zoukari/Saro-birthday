@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from 'react'
 import { collectImageUrls } from '../data/images.js'
 import { SLIDES } from '../data/slides.js'
 
-const MUSIC_URL = import.meta.env.VITE_MUSIC_URL || encodeURI('/Taylor Swift - Lover (Official Music Video) (1).mp3')
-const isExternalMusic = Boolean(import.meta.env.VITE_MUSIC_URL)
+const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/'
+const MUSIC_URL = baseUrl + encodeURIComponent('Taylor Swift - Lover (Official Music Video) (1).mp3')
 
 export default function Loader({ audioRef, onComplete }) {
   const [pct, setPct] = useState(0)
@@ -38,12 +38,7 @@ export default function Loader({ audioRef, onComplete }) {
       setTimeout(onComplete, 1200)
     }
 
-    if (isExternalMusic) {
-      audio.load()
-      setTimeout(checkDone, 2500)
-    } else {
-      audio.addEventListener('canplaythrough', () => checkDone(), { once: true })
-    }
+    audio.addEventListener('canplaythrough', () => checkDone(), { once: true })
     audio.addEventListener('error', () => checkDone(), { once: true })
 
     urls.forEach(url => {

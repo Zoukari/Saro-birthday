@@ -31,8 +31,6 @@ export default function SlideFramed({ img, cap, w, h }) {
           <img src={img} alt="" loading="eager" style={{ width: w, height: h }} />
         </div>
       </div>
-      <div className="divider-gold" />
-      <div className="text-[9px] tracking-[.54em] uppercase text-gold opacity-80">{cap}</div>
     </div>
   )
 }

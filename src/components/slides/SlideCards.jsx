@@ -24,7 +24,7 @@ function FlyingCard({ card, ci }) {
   }
 
   const imgH    = card.h
-  const totalH  = card.pol ? imgH + 44 : imgH
+  const totalH  = imgH
 
   return (
     <div
@@ -47,23 +47,6 @@ function FlyingCard({ card, ci }) {
         loading="eager"
         style={{ width: card.w, height: imgH, display: 'block', objectFit: 'cover' }}
       />
-      {card.pol ? (
-        <div style={{
-          padding: '8px 0 0', textAlign: 'center', color: '#4a3728',
-          fontSize: 8, letterSpacing: '.34em', textTransform: 'uppercase',
-        }}>
-          {card.lbl}
-        </div>
-      ) : (
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          padding: '12px',
-          background: 'linear-gradient(to top,rgba(43,33,24,.88),transparent)',
-          color: '#fff', fontSize: 8, letterSpacing: '.42em', textTransform: 'uppercase',
-        }}>
-          {card.lbl}
-        </div>
-      )}
     </div>
   )
 }

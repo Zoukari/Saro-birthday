@@ -39,32 +39,31 @@ function convertMovToJpg(inputPath) {
 
 function getAllImageFiles(dir) {
   const names = fs.readdirSync(dir)
-  return names
+  const filtered = names
     .filter(n => /\.(jpg|jpeg|png|JPG|JPEG|PNG)$/.test(n))
+    .filter(n => !/ 2\.(jpg|jpeg|png|JPG|JPEG|PNG)$/i.test(n)) // pas de doublon "xxx 2.jpg"
     .sort()
+  return filtered
 }
 
 function updateImagesJs(imageFiles) {
   const list = imageFiles.map(f => `  '${f.replace(/'/g, "\\'")}'`).join(',\n')
   const content = `// ─────────────────────────────────────────────────────────
-// Galerie : toutes les images de public/photo-saro
-// Généré / mis à jour par: node scripts/convert-photos.js
+// Galerie : public/photo-saro — généré par node scripts/convert-photos.js
 // ─────────────────────────────────────────────────────────
 
 const PHOTO_SARO_FILES = [
 ${list}
 ]
 
-const BASE = '/photo-saro/'
-let pi = 0, li = 0, qi = 0
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\\/$/, '') + '/photo-saro/'
+const N = PHOTO_SARO_FILES.length
 
-function photoUrl(index) {
-  return BASE + encodeURIComponent(PHOTO_SARO_FILES[index % PHOTO_SARO_FILES.length])
+/** Index → URL ; utilisé par slides.js (imageStarts) */
+export function photoUrl(index) {
+  return BASE + encodeURIComponent(PHOTO_SARO_FILES[index % N])
 }
-
-export const np = () => photoUrl(pi++)
-export const nl = () => photoUrl(li++)
-export const nq = () => photoUrl(qi++)
+export { N as PHOTO_COUNT }
 
 export function collectImageUrls(slides) {
   const urls = []

@@ -1,6 +1,5 @@
 // ─────────────────────────────────────────────────────────
-// Galerie : une image différente par slide (index unique)
-// Généré par: node scripts/convert-photos.js
+// Galerie : public/photo-saro — généré par node scripts/convert-photos.js
 // ─────────────────────────────────────────────────────────
 
 const PHOTO_SARO_FILES = [
@@ -17,7 +16,6 @@ const PHOTO_SARO_FILES = [
   '53ddec30-79d7-40d4-8b51-584434981cf6.JPG',
   '5bdbfb78-ccd9-44f0-a66f-1b96a1a2401b.jpeg',
   '6ed437c0-5b03-4685-8c2b-a5e1b013c3ba.jpeg',
-  '732e7482-7973-45d9-bb3d-be3f4cb1a626.jpeg',
   '8c49d815-80f5-496f-b546-b6729b364609.jpeg',
   '92fa8cc4-62a9-4290-9cee-226f8bece67e.jpeg',
   '96cdd09e-3919-4315-a2ce-d011587704e9.JPG',
@@ -68,10 +66,10 @@ const PHOTO_SARO_FILES = [
   'ff0d11cb-28d4-4777-b1f6-5b9a05153a03.jpeg'
 ]
 
-const BASE = '/photo-saro/'
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/photo-saro/'
 const N = PHOTO_SARO_FILES.length
 
-/** Index → URL ; index % N pour ne pas dépasser le pool */
+/** Index → URL ; utilisé par slides.js (imageStarts) */
 export function photoUrl(index) {
   return BASE + encodeURIComponent(PHOTO_SARO_FILES[index % N])
 }
