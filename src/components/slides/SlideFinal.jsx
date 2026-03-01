@@ -1,7 +1,7 @@
 export default function SlideFinal() {
   const memeUrl = 'https://youtube.com/shorts/jqa6UT_AnhE?si=bY-F2SU0eckIEOHx'
   return (
-    <div className="flex flex-col items-center justify-center text-center gap-4 p-10 w-full h-full">
+    <div className="flex flex-col items-center justify-start text-center gap-4 p-10 pt-8 w-full h-full">
       <div className="final-heart" style={{ fontSize: 'clamp(66px,13vw,144px)' }}>♥</div>
       <div className="divider-gold" style={{ marginTop: 16 }} />
       <div

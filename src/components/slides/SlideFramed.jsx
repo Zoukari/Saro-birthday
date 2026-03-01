@@ -22,7 +22,7 @@ export default function SlideFramed({ img, cap, w, h, extra, memeLink }) {
   const memeUrl = 'https://youtube.com/shorts/jqa6UT_AnhE?si=bY-F2SU0eckIEOHx'
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5 w-full h-full">
+    <div className="relative flex flex-col items-center justify-center gap-5 w-full h-full">
       <div
         ref={fwRef}
         className="frame-wrap"
@@ -33,12 +33,14 @@ export default function SlideFramed({ img, cap, w, h, extra, memeLink }) {
           <img src={img} alt="" loading="eager" style={{ width: w, height: h }} />
         </div>
       </div>
-      {(extra || cap) && <div className="font-serif italic text-choco text-center text-lg opacity-90">{extra || cap}</div>}
-      {memeLink && (
-        <a href={memeUrl} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline text-sm">
-          Lien du meme
-        </a>
-      )}
+      <div className="absolute top-4 left-4 right-4 flex flex-col items-center gap-1 z-10">
+        {(extra || cap) && <div className="font-serif italic text-choco text-center text-lg opacity-90 drop-shadow-sm">{extra || cap}</div>}
+        {memeLink && (
+          <a href={memeUrl} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline text-sm">
+            Lien du meme
+          </a>
+        )}
+      </div>
     </div>
   )
 }

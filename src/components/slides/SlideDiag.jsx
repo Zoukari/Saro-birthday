@@ -4,7 +4,7 @@ export default function SlideDiag({ q, sub, extra, al }) {
 
   return (
     <div
-      className={`flex flex-col justify-end gap-3 p-[9vw] w-full h-full relative ${alignStyle}`}
+      className={`flex flex-col justify-start gap-3 p-[9vw] pt-8 w-full h-full relative ${alignStyle}`}
       style={isRight ? { justifyContent: 'flex-start' } : {}}
     >
       <div className="text-[9px] tracking-[.54em] uppercase text-gold opacity-80 z-10">

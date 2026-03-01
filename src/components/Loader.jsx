@@ -7,10 +7,12 @@ import { collectImageUrls } from '../data/images.js'
 import { SLIDES } from '../data/slides.js'
 
 const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') + '/'
-const MUSIC_URL = baseUrl + encodeURIComponent('Taylor Swift - Lover (Official Music Video) (1).mp3')
+const musicFilename = 'Taylor Swift - Lover (Official Music Video) (1).mp3'
+const MUSIC_URL = baseUrl + musicFilename.split(' ').join('%20')
 
 export default function Loader({ audioRef, onComplete }) {
   const [pct, setPct] = useState(0)
+  const [ready, setReady] = useState(false)
   const [fadeOut, setFadeOut] = useState(false)
   const launched = useRef(false)
 
@@ -22,6 +24,7 @@ export default function Loader({ audioRef, onComplete }) {
     let done = 0
     const audio = new Audio(MUSIC_URL)
     audio.preload = 'auto'
+    audio.load()
     audioRef.current = audio
 
     const checkDone = () => {
@@ -34,8 +37,7 @@ export default function Loader({ audioRef, onComplete }) {
     const launch = () => {
       if (launched.current) return
       launched.current = true
-      setFadeOut(true)
-      setTimeout(onComplete, 1200)
+      setReady(true)
     }
 
     audio.addEventListener('canplaythrough', () => checkDone(), { once: true })
@@ -50,14 +52,37 @@ export default function Loader({ audioRef, onComplete }) {
     if (urls.length === 0) checkDone()
   }, [onComplete, audioRef])
 
-  if (fadeOut === null) return null
+  const handleEnter = () => {
+    setFadeOut(true)
+    if (audioRef?.current) {
+      audioRef.current.volume = 0.55
+      audioRef.current.play().catch(() => {})
+    }
+    setTimeout(onComplete, 400)
+  }
+
+  if (ready) {
+    return (
+      <div
+        className={`fixed inset-0 z-[9500] bg-choco flex flex-col items-center justify-center gap-8 ${fadeOut ? 'loader-fade-out' : ''}`}
+        style={{ pointerEvents: fadeOut ? 'none' : 'auto' }}
+      >
+        <div className="font-serif italic font-light" style={{ fontSize: 'clamp(54px,12vw,112px)', opacity: 0.95, color: '#2b2118' }}>
+          Saro
+        </div>
+        <button
+          type="button"
+          onClick={handleEnter}
+          className="cursor-pointer px-8 py-4 rounded-full text-choco font-medium tracking-wide border-2 border-gold hover:bg-gold hover:text-white transition-colors"
+        >
+          Clique pour entrer ♥
+        </button>
+      </div>
+    )
+  }
 
   return (
-    <div
-      className={`fixed inset-0 z-[9500] bg-choco flex flex-col items-center justify-center gap-7
-        ${fadeOut ? 'loader-fade-out' : ''}`}
-      style={{ pointerEvents: fadeOut ? 'none' : 'auto' }}
-    >
+    <div className="fixed inset-0 z-[9500] bg-choco flex flex-col items-center justify-center gap-7" style={{ pointerEvents: 'auto' }}>
       <div className="loader-spinner mb-2" aria-hidden="true" />
       <div
         className="font-serif italic font-light"

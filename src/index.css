@@ -97,10 +97,12 @@ html, body, #root {
   background-size: 38px 38px;
 }
 
-/* ── SLIDE BASE ── */
+/* ── SLIDE BASE ── (marge basse pour ne pas cacher le contenu sous la barre du bas) */
 .slide-base {
   position: absolute;
   inset: 0;
+  padding-bottom: 140px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
