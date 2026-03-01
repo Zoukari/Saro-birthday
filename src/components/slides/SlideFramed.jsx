@@ -1,8 +1,9 @@
 import { useRef } from 'react'
 import { MEME_LINK } from '../../data/memeLink.js'
 
-export default function SlideFramed({ img, cap, w, h, linkMeme }) {
+export default function SlideFramed({ img, cap, w, h, linkMeme, capPosition }) {
   const fwRef = useRef(null)
+  const isCapTop = capPosition === 'top'
 
   const onMove = e => {
     const el = fwRef.current
@@ -21,7 +22,12 @@ export default function SlideFramed({ img, cap, w, h, linkMeme }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 w-full h-full pb-28">
+    <div className="flex flex-col items-center justify-center gap-4 w-full h-full pb-28 relative">
+      {cap && isCapTop && (
+        <p className="absolute top-8 left-1/2 -translate-x-1/2 text-center font-serif italic font-light text-choco max-w-lg px-4 z-10" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
+          {cap}
+        </p>
+      )}
       <div
         ref={fwRef}
         className="frame-wrap"
@@ -32,7 +38,7 @@ export default function SlideFramed({ img, cap, w, h, linkMeme }) {
           <img src={img} alt="" loading="eager" style={{ width: w, height: h }} />
         </div>
       </div>
-      {cap && (
+      {cap && !isCapTop && (
         <p className="font-serif italic font-light text-choco text-center px-4" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
           {cap}
         </p>
