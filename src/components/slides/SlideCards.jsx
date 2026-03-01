@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { resolveCards } from '../../data/cardLayouts.js'
 
-function FlyingCard({ card, ci }) {
+function FlyingCard({ card, ci, rounded }) {
   const cardRef = useRef(null)
 
   const baseTf = `translate(-50%,-50%) rotate(${card.r}deg) scale(${card.s})`
@@ -37,6 +37,8 @@ function FlyingCard({ card, ci }) {
         top:       `calc(50% + ${card.y}%)`,
         transform: baseTf,
         zIndex:    10 + ci,
+        borderRadius: rounded ? 16 : undefined,
+        overflow: rounded ? 'hidden' : undefined,
       }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
@@ -45,19 +47,24 @@ function FlyingCard({ card, ci }) {
         src={card.img}
         alt=""
         loading="eager"
-        style={{ width: card.w, height: imgH, display: 'block', objectFit: 'cover' }}
+        style={{ width: card.w, height: imgH, display: 'block', objectFit: 'cover', borderRadius: rounded ? 16 : 0 }}
       />
     </div>
   )
 }
 
-export default function SlideCards({ v, imgs, lbls }) {
+export default function SlideCards({ v, imgs, lbls, rounded, recap }) {
   const cards = resolveCards(v, imgs, lbls)
   return (
     <div className="absolute inset-0 overflow-hidden">
       {cards.map((card, ci) => (
-        <FlyingCard key={ci} card={card} ci={ci} />
+        <FlyingCard key={ci} card={card} ci={ci} rounded={rounded} />
       ))}
+      {recap && (
+        <div className="absolute bottom-0 left-0 right-0 font-serif italic text-choco text-center text-sm px-6 pb-8 pt-2 opacity-90 max-w-xl mx-auto z-20" style={{ fontSize: 'clamp(14px,2vw,22px)' }}>
+          {recap}
+        </div>
+      )}
     </div>
   )
 }

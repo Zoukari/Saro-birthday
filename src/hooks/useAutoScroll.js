@@ -34,30 +34,47 @@ export function useAutoScroll(n, running) {
     el.style.pointerEvents = 'none'
   }, [])
 
-  const renderEl = useCallback((el, p) => {
+  const renderEl = useCallback((el, p, ci) => {
     if (!el) return
-    const enterEnd = 0.2
-    const exitStart = 0.72
+    const isLastSlide = ci === n - 1
+    const isPreLastSlide = ci === n - 2
+    const enterEnd = 0.25
+    const exitStart = 0.7
     let yPct, scale, op
-    if (p < enterEnd) {
-      const t = easeOutCubic(p / enterEnd)
-      yPct = lerp(22, 0, t)
-      scale = lerp(1.04, 1, t)
-      op = lerp(0.4, 1, t)
-    } else if (p < exitStart) {
+
+    if (isLastSlide) {
+      // Slide 50 : apparition avec effet (scale + fade in)
+      const t = easeOutCubic(Math.min(p / 0.5, 1))
       yPct = 0
-      scale = 1
-      op = 1
-    } else {
+      scale = lerp(0.65, 1, t)
+      op = lerp(0, 1, t)
+    } else if (isPreLastSlide && p > exitStart) {
+      // Avant la slide 50 : dézoom en sortie
       const t = easeInOutCubic((p - exitStart) / (1 - exitStart))
-      yPct = lerp(0, -22, t)
-      scale = lerp(1, 0.97, t)
-      op = lerp(1, 0.35, t)
+      yPct = lerp(0, -8, t)
+      scale = lerp(1, 0.75, t)
+      op = lerp(1, 0.4, t)
+    } else {
+      if (p < enterEnd) {
+        const t = easeOutCubic(p / enterEnd)
+        yPct = lerp(12, 0, t)
+        scale = lerp(1.02, 1, t)
+        op = lerp(0.6, 1, t)
+      } else if (p < exitStart) {
+        yPct = 0
+        scale = 1
+        op = 1
+      } else {
+        const t = easeInOutCubic((p - exitStart) / (1 - exitStart))
+        yPct = lerp(0, -12, t)
+        scale = lerp(1, 0.98, t)
+        op = lerp(1, 0.5, t)
+      }
     }
     el.style.opacity = String(op)
     el.style.transform = `translateY(${yPct}%) scale(${scale})`
-    el.style.pointerEvents = p >= enterEnd && p <= exitStart ? 'auto' : 'none'
-  }, [])
+    el.style.pointerEvents = !isLastSlide && p >= enterEnd && p <= exitStart ? 'auto' : 'none'
+  }, [n])
 
   const jumpTo = useCallback(i => {
     slideRefs.current.forEach(hideEl)
@@ -66,7 +83,12 @@ export function useAutoScroll(n, running) {
   }, [n, hideEl])
 
   useEffect(() => {
-    if (!running) return
+    if (!running) {
+      // Gel de la position au moment de la pause pour reprendre au même endroit
+      const frozen = lastProgressFracRef.current
+      startRef.current = performance.now() - frozen * TOTAL_MS
+      return
+    }
 
     const tick = ts => {
       if (startRef.current === null) startRef.current = ts
@@ -82,7 +104,7 @@ export function useAutoScroll(n, running) {
         setCurrentIdx(ci)
       }
 
-      renderEl(slideRefs.current[ci], ip)
+      renderEl(slideRefs.current[ci], ip, ci)
 
       if (Math.abs(ip - lastSlideProgRef.current) > 0.02) {
         lastSlideProgRef.current = ip

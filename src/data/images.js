@@ -73,6 +73,10 @@ const N = PHOTO_SARO_FILES.length
 export function photoUrl(index) {
   return BASE + encodeURIComponent(PHOTO_SARO_FILES[index % N])
 }
+/** URL pour un fichier par nom (ex. imgOverride) */
+export function photoUrlByFile(filename) {
+  return BASE + encodeURIComponent(filename)
+}
 export { N as PHOTO_COUNT }
 
 export function collectImageUrls(slides) {

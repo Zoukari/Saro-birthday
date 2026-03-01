@@ -98,6 +98,15 @@ export const CARD_VARIANTS = {
     { x:  48, y:  2, r:  2, s: .78, w: 183, h: 325 },
   ],
 
+  /** 5 cartes en ruban horizontal (bien espacées, pas de chevauchement) */
+  strip5: [
+    { x: -52, y: 0, r: -2, s: .72, w: 165, h: 295 },
+    { x: -26, y: 2, r: -1, s: .82, w: 188, h: 328 },
+    { x:   0, y: -2, r:  0, s: .90, w: 205, h: 355 },
+    { x:  26, y: 2, r:  1, s: .82, w: 188, h: 328 },
+    { x:  52, y: 0, r:  2, s: .72, w: 165, h: 295 },
+  ],
+
   /** 2 grandes cartes symétriques */
   pair2: [
     { x: -26, y: 0, r: -4, s: .95, w: 265, h: 392 },

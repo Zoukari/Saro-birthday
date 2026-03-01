@@ -1,14 +1,14 @@
-export default function SlideHero() {
+export default function SlideHero({ heroText }) {
   return (
     <div className="flex flex-col items-center justify-center text-center gap-2 p-10 w-full h-full">
       <div className="text-[9px] tracking-[.6em] uppercase text-gold opacity-80">
         ✦ Un jour très spécial ✦
       </div>
       <div
-        className="font-serif font-light text-choco leading-[.88] tracking-tight"
-        style={{ fontSize: 'clamp(44px,9vw,116px)' }}
+        className="font-serif italic font-light shimmer-text text-choco leading-[.92] tracking-tight"
+        style={{ fontSize: 'clamp(32px,7vw,90px)' }}
       >
-        JOYEUX<br />ANNIVERSAIRE
+        {heroText || 'Joyeux anniversaire'}
       </div>
       <div className="divider-gold" />
       <div
